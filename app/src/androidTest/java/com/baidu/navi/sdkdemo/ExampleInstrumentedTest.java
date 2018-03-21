@@ -1,4 +1,4 @@
-package com.example.administrator.navi;
+package com.baidu.navi.sdkdemo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.administrator.navi", appContext.getPackageName());
+        assertEquals("com.baidu.navi.sdkdemo", appContext.getPackageName());
     }
 }

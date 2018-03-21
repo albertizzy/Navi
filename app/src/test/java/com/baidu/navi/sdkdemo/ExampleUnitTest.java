@@ -1,4 +1,4 @@
-package com.example.administrator.navi;
+package com.baidu.navi.sdkdemo;
 
 import org.junit.Test;
 
