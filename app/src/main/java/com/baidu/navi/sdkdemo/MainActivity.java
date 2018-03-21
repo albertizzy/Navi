@@ -80,11 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
     private String mSDCardPath = null;
     public static final String ROUTE_PLAN_NODE = "routePlanNode";
-    public static final String SHOW_CUSTOM_ITEM = "showCustomItem";
-    public static final String RESET_END_NODE = "resetEndNode";
-    public static final String VOID_MODE = "voidMode";
-    private final static String authBaseArr[] =
-            {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
+    private final static String authBaseArr[] = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
     private final static String authComArr[] = {Manifest.permission.READ_PHONE_STATE};
     private final static int authBaseRequestCode = 1;
     private final static int authComRequestCode = 2;
@@ -293,6 +289,30 @@ public class MainActivity extends AppCompatActivity {
         public void onRoutePlanFailed() {
             // TODO Auto-generated method stub
             Toast.makeText(MainActivity.this, "算路失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        // TODO Auto-generated method stub
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == authBaseRequestCode) {
+            for (int ret : grantResults) {
+                if (ret == 0) {
+                    continue;
+                } else {
+                    Toast.makeText(MainActivity.this, "缺少导航基本的权限!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+            initNavi();
+        } else if (requestCode == authComRequestCode) {
+            for (int ret : grantResults) {
+                if (ret == 0) {
+                    continue;
+                }
+            }
+            routeplanToNavi(mCoordinateType);
         }
     }
 
