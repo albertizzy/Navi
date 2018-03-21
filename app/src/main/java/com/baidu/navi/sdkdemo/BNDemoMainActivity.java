@@ -31,7 +31,7 @@ import java.util.List;
 
 public class BNDemoMainActivity extends Activity {
 
-    public static List<Activity> activityList = new LinkedList<Activity>();
+    public static List<Activity> activityList = new LinkedList<>();
 
     private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
 
@@ -74,10 +74,10 @@ public class BNDemoMainActivity extends Activity {
                 delayTest();
             }
         }, 500);
-        mWgsNaviBtn = (Button) findViewById(R.id.wgsNaviBtn);
-        mGcjNaviBtn = (Button) findViewById(R.id.gcjNaviBtn);
-        mBdmcNaviBtn = (Button) findViewById(R.id.bdmcNaviBtn);
-        mDb06ll = (Button) findViewById(R.id.mDb06llNaviBtn);
+        mWgsNaviBtn = findViewById(R.id.wgsNaviBtn);
+        mGcjNaviBtn = findViewById(R.id.gcjNaviBtn);
+        mBdmcNaviBtn = findViewById(R.id.bdmcNaviBtn);
+        mDb06ll = findViewById(R.id.mDb06llNaviBtn);
         BNOuterLogUtil.setLogSwitcher(true);
 
         initListener();
@@ -349,10 +349,9 @@ public class BNDemoMainActivity extends Activity {
                 break;
             }
             default:
-                ;
         }
         if (sNode != null && eNode != null) {
-            List<BNRoutePlanNode> list = new ArrayList<BNRoutePlanNode>();
+            List<BNRoutePlanNode> list = new ArrayList<>();
             list.add(sNode);
             list.add(eNode);
 
@@ -394,7 +393,7 @@ public class BNDemoMainActivity extends Activity {
             }
             Intent intent = new Intent(BNDemoMainActivity.this, BNDemoGuideActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(ROUTE_PLAN_NODE, (BNRoutePlanNode) mBNRoutePlanNode);
+            bundle.putSerializable(ROUTE_PLAN_NODE, mBNRoutePlanNode);
             intent.putExtras(bundle);
             startActivity(intent);
 

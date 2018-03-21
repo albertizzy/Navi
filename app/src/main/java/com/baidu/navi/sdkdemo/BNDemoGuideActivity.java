@@ -1,19 +1,5 @@
 package com.baidu.navi.sdkdemo;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.baidu.navi.sdkdemo.R;
-import com.baidu.navisdk.adapter.BNRouteGuideManager;
-import com.baidu.navisdk.adapter.BNRouteGuideManager.CustomizedLayerItem;
-import com.baidu.navisdk.adapter.BNRouteGuideManager.OnNavigationListener;
-import com.baidu.navisdk.adapter.BNRoutePlanNode;
-import com.baidu.navisdk.adapter.BNaviBaseCallbackModel;
-import com.baidu.navisdk.adapter.BaiduNaviCommonModule;
-import com.baidu.navisdk.adapter.NaviModuleFactory;
-import com.baidu.navisdk.adapter.NaviModuleImpl;
-import com.baidu.navisdk.adapter.BNRoutePlanNode.CoordinateType;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
@@ -21,14 +7,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
-import com.baidu.navi.sdkdemo.BNDemoMainActivity;
+
+import com.baidu.navisdk.adapter.BNRouteGuideManager;
+import com.baidu.navisdk.adapter.BNRouteGuideManager.CustomizedLayerItem;
+import com.baidu.navisdk.adapter.BNRouteGuideManager.OnNavigationListener;
+import com.baidu.navisdk.adapter.BNRoutePlanNode;
+import com.baidu.navisdk.adapter.BNRoutePlanNode.CoordinateType;
+import com.baidu.navisdk.adapter.BNaviBaseCallbackModel;
+import com.baidu.navisdk.adapter.BaiduNaviCommonModule;
+import com.baidu.navisdk.adapter.NaviModuleFactory;
+import com.baidu.navisdk.adapter.NaviModuleImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 诱导界面
- * 
- * @author sunhao04
  *
+ * @author sunhao04
  */
 public class BNDemoGuideActivity extends Activity {
 
@@ -57,16 +53,16 @@ public class BNDemoGuideActivity extends Activity {
             mBaiduNaviCommonModule = NaviModuleFactory.getNaviModuleManager().getNaviCommonModule(
                     NaviModuleImpl.BNaviCommonModuleConstants.ROUTE_GUIDE_MODULE, this,
                     BNaviBaseCallbackModel.BNaviBaseCallbackConstants.CALLBACK_ROUTEGUIDE_TYPE, mOnNavigationListener);
-            if(mBaiduNaviCommonModule != null) {
+            if (mBaiduNaviCommonModule != null) {
                 mBaiduNaviCommonModule.onCreate();
                 view = mBaiduNaviCommonModule.getView();
             }
-            
+
         } else {
             //使用传统接口
-            view = BNRouteGuideManager.getInstance().onCreate(this,mOnNavigationListener);
+            view = BNRouteGuideManager.getInstance().onCreate(this, mOnNavigationListener);
         }
-        
+
 
         if (view != null) {
             setContentView(view);
@@ -83,7 +79,7 @@ public class BNDemoGuideActivity extends Activity {
         if (hd != null) {
             hd.sendEmptyMessageAtTime(MSG_SHOW, 5000);
         }
-        
+
         BNEventHandler.getInstance().getDialog(this);
         BNEventHandler.getInstance().showDialog();
     }
@@ -91,36 +87,35 @@ public class BNDemoGuideActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(useCommonInterface) {
-            if(mBaiduNaviCommonModule != null) {
+        if (useCommonInterface) {
+            if (mBaiduNaviCommonModule != null) {
                 mBaiduNaviCommonModule.onResume();
             }
         } else {
             BNRouteGuideManager.getInstance().onResume();
         }
-        
-      
-     
+
+
     }
 
     protected void onPause() {
         super.onPause();
-        
-        if(useCommonInterface) {
-            if(mBaiduNaviCommonModule != null) {
+
+        if (useCommonInterface) {
+            if (mBaiduNaviCommonModule != null) {
                 mBaiduNaviCommonModule.onPause();
             }
         } else {
             BNRouteGuideManager.getInstance().onPause();
         }
-      
-    };
+
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(useCommonInterface) {
-            if(mBaiduNaviCommonModule != null) {
+        if (useCommonInterface) {
+            if (mBaiduNaviCommonModule != null) {
                 mBaiduNaviCommonModule.onDestroy();
             }
         } else {
@@ -133,14 +128,14 @@ public class BNDemoGuideActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(useCommonInterface) {
-            if(mBaiduNaviCommonModule != null) {
+        if (useCommonInterface) {
+            if (mBaiduNaviCommonModule != null) {
                 mBaiduNaviCommonModule.onStop();
             }
         } else {
             BNRouteGuideManager.getInstance().onStop();
         }
-       
+
     }
 
     /*/
@@ -150,8 +145,8 @@ public class BNDemoGuideActivity extends Activity {
      */
     @Override
     public void onBackPressed() {
-        if(useCommonInterface) {
-            if(mBaiduNaviCommonModule != null) {
+        if (useCommonInterface) {
+            if (mBaiduNaviCommonModule != null) {
                 mBaiduNaviCommonModule.onBackPressed(true);
             }
         } else {
@@ -161,51 +156,53 @@ public class BNDemoGuideActivity extends Activity {
 
     public void onConfigurationChanged(android.content.res.Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if(useCommonInterface) {
-            if(mBaiduNaviCommonModule != null) {
+        if (useCommonInterface) {
+            if (mBaiduNaviCommonModule != null) {
                 mBaiduNaviCommonModule.onConfigurationChanged(newConfig);
             }
         } else {
             BNRouteGuideManager.getInstance().onConfigurationChanged(newConfig);
         }
 
-    };
-    
-    
+    }
+
+
     @Override
     public boolean onKeyDown(int keyCode, android.view.KeyEvent event) {
-        if(useCommonInterface) {
-            if(mBaiduNaviCommonModule != null) {
+        if (useCommonInterface) {
+            if (mBaiduNaviCommonModule != null) {
                 Bundle mBundle = new Bundle();
                 mBundle.putInt(RouteGuideModuleConstants.KEY_TYPE_KEYCODE, keyCode);
                 mBundle.putParcelable(RouteGuideModuleConstants.KEY_TYPE_EVENT, event);
                 mBaiduNaviCommonModule.setModuleParams(RouteGuideModuleConstants.METHOD_TYPE_ON_KEY_DOWN, mBundle);
                 try {
-                    Boolean ret = (Boolean)mBundle.get(RET_COMMON_MODULE);
-                    if(ret) {
+                    Boolean ret = (Boolean) mBundle.get(RET_COMMON_MODULE);
+                    if (ret) {
                         return true;
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        } 
-        return super.onKeyDown(keyCode, event);  
+        }
+        return super.onKeyDown(keyCode, event);
     }
+
     @Override
     protected void onStart() {
         super.onStart();
         // TODO Auto-generated method stub
-        if(useCommonInterface) {
-            if(mBaiduNaviCommonModule != null) {
+        if (useCommonInterface) {
+            if (mBaiduNaviCommonModule != null) {
                 mBaiduNaviCommonModule.onStart();
             }
         } else {
             BNRouteGuideManager.getInstance().onStart();
         }
     }
+
     private void addCustomizedLayerItems() {
-        List<CustomizedLayerItem> items = new ArrayList<CustomizedLayerItem>();
+        List<CustomizedLayerItem> items = new ArrayList<>();
         CustomizedLayerItem item1 = null;
         if (mBNRoutePlanNode != null) {
             item1 = new CustomizedLayerItem(mBNRoutePlanNode.getLongitude(), mBNRoutePlanNode.getLatitude(),
@@ -235,7 +232,7 @@ public class BNDemoGuideActivity extends Activity {
                         BNRouteGuideManager.getInstance().resetEndNodeInNavi(
                                 new BNRoutePlanNode(116.21142, 40.85087, "百度大厦11", null, CoordinateType.GCJ02));
                     }
-                };
+                }
             };
         }
     }
@@ -250,7 +247,7 @@ public class BNDemoGuideActivity extends Activity {
 
         @Override
         public void notifyOtherAction(int actionType, int arg1, int arg2, Object obj) {
-            
+
             if (actionType == 0) {
                 //导航到达目的地 自动退出
                 Log.i(TAG, "notifyOtherAction actionType = " + actionType + ",导航到达目的地！");
@@ -260,9 +257,9 @@ public class BNDemoGuideActivity extends Activity {
         }
 
     };
-    
+
     private final static String RET_COMMON_MODULE = "module.ret";
-    
+
     private interface RouteGuideModuleConstants {
         final static int METHOD_TYPE_ON_KEY_DOWN = 0x01;
         final static String KEY_TYPE_KEYCODE = "keyCode";

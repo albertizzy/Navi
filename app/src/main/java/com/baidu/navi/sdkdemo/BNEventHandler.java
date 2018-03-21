@@ -1,7 +1,5 @@
 package com.baidu.navi.sdkdemo;
 
-import com.baidu.navisdk.adapter.BNaviCommonParams;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,45 +7,47 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.baidu.navisdk.adapter.BNaviCommonParams;
+
 public class BNEventHandler {
-    
+
     private BNEventDialog mEventDialog = null;
-    
+
     private static class LazyLoader {
         private static BNEventHandler mInstance = new BNEventHandler();
     }
-    
+
     public static BNEventHandler getInstance() {
         return LazyLoader.mInstance;
     }
-    
+
     private BNEventHandler() {
     }
-    
+
     public BNEventDialog getDialog(Context ctx) {
         if (mEventDialog == null) {
             mEventDialog = new BNEventDialog(ctx);
         }
         return mEventDialog;
     }
-    
+
     public void showDialog() {
         if (mEventDialog != null) {
             mEventDialog.setCanceledOnTouchOutside(false);
             mEventDialog.show();
         }
     }
-    
+
     public void dismissDialog() {
         if (mEventDialog != null) {
             mEventDialog.dismiss();
         }
     }
-    
+
     public void disposeDialog() {
         mEventDialog = null;
     }
-    
+
     public void handleNaviEvent(int what, int arg1, int arg2, Bundle bundle) {
         Log.i("onCommonEventCall", String.format("%d,%d,%d,%s", what, arg1, arg2,
                 (bundle == null ? "" : bundle.toString())));
@@ -77,7 +77,7 @@ public class BNEventHandler {
             case BNaviCommonParams.MessageType.EVENT_ROAD_NEXT_ROAD_NAME:
                 String nextRoad = bundle.getString(BNaviCommonParams.BNGuideKey.NEXT_ROAD_NAME);
                 if (!TextUtils.isEmpty(nextRoad)) {
-                    mEventDialog.updateNextRoad(nextRoad); 
+                    mEventDialog.updateNextRoad(nextRoad);
                 }
                 break;
             case BNaviCommonParams.MessageType.EVENT_ROAD_CURRENT_ROAD_NAME:
@@ -131,7 +131,7 @@ public class BNEventHandler {
                 break;
             case BNaviCommonParams.MessageType.EVENT_CURRENT_MILES:
                 int miles = arg1;
-            default :
+            default:
                 break;
         }
     }
