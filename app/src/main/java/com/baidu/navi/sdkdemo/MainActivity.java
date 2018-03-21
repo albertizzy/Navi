@@ -13,6 +13,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.baidu.navisdk.adapter.BNCommonSettingParam;
@@ -34,7 +35,7 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
     private URL mIntentUrl;
     private WebView mWebView;
-    private static final String mHomeUrl = "http://www.baidu.com/";
+    private static final String mHomeUrl = "http://10.10.10.103:8080/";
     private static final String TAG = "MainActivity";
 
     @Override
@@ -319,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("time-cost", "cost time: " + (System.currentTimeMillis() - time));
         CookieSyncManager.createInstance(MainActivity.this);
         CookieSyncManager.getInstance().sync();
+        mWebView.addJavascriptInterface(new Navi(), "navi");
     }
 
     @Override
@@ -350,5 +352,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         dialog.create().show();
+    }
+
+    public class Navi {
+        @JavascriptInterface
+        public void navi() {
+            Toast.makeText(MainActivity.this, "navi", Toast.LENGTH_SHORT).show();
+        }
     }
 }
