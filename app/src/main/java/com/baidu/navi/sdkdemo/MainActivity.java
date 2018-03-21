@@ -225,39 +225,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        BNRoutePlanNode sNode = null;
-        BNRoutePlanNode eNode = null;
-        switch (coType) {
-            case GCJ02: {
-                sNode = new BNRoutePlanNode(116.30142, 40.05087, "百度大厦", null, coType);
-                eNode = new BNRoutePlanNode(116.39750, 39.90882, "北京天安门", null, coType);
-                break;
-            }
-            case WGS84: {
-                sNode = new BNRoutePlanNode(116.300821, 40.050969, "百度大厦", null, coType);
-                eNode = new BNRoutePlanNode(116.397491, 39.908749, "北京天安门", null, coType);
-                break;
-            }
-            case BD09_MC: {
-                sNode = new BNRoutePlanNode(12947471, 4846474, "百度大厦", null, coType);
-                eNode = new BNRoutePlanNode(12958160, 4825947, "北京天安门", null, coType);
-                break;
-            }
-            case BD09LL: {
-                sNode = new BNRoutePlanNode(116.30784537597782, 40.057009624099436, "百度大厦", null, coType);
-                eNode = new BNRoutePlanNode(116.40386525193937, 39.915160800132085, "北京天安门", null, coType);
-                break;
-            }
-            default:
-        }
-        if (sNode != null && eNode != null) {
-            List<BNRoutePlanNode> list = new ArrayList<>();
-            list.add(sNode);
-            list.add(eNode);
-            // 开发者可以使用旧的算路接口，也可以使用新的算路接口,可以接收诱导信息等
-            // BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true, new DemoRoutePlanListener(sNode));
-            BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true, new DemoRoutePlanListener(sNode), eventListerner);
-        }
+        BNRoutePlanNode sNode = new BNRoutePlanNode(116.30784537597782, 40.057009624099436, "百度大厦", null, coType);
+        BNRoutePlanNode eNode = new BNRoutePlanNode(116.40386525193937, 39.915160800132085, "北京天安门", null, coType);
+
+        List<BNRoutePlanNode> list = new ArrayList<>();
+        list.add(sNode);
+        list.add(eNode);
+        // 开发者可以使用旧的算路接口，也可以使用新的算路接口,可以接收诱导信息等
+        // BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true, new DemoRoutePlanListener(sNode));
+        BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true, new DemoRoutePlanListener(sNode), eventListerner);
     }
 
     BaiduNaviManager.NavEventListener eventListerner = new BaiduNaviManager.NavEventListener() {
@@ -474,8 +450,8 @@ public class MainActivity extends AppCompatActivity {
     public class Navi {
         @JavascriptInterface
         public void navi() {
-//            Toast.makeText(MainActivity.this, "navi", Toast.LENGTH_SHORT).show();
             if (BaiduNaviManager.isNaviInited()) {
+                Toast.makeText(MainActivity.this, "启动导航", Toast.LENGTH_SHORT).show();
                 routeplanToNavi(BNRoutePlanNode.CoordinateType.BD09LL);
             } else {
                 Toast.makeText(MainActivity.this, "请等待地图初始化", Toast.LENGTH_SHORT).show();
