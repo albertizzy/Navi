@@ -1,6 +1,7 @@
 package com.baidu.navi.sdkdemo;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.baidu.navisdk.adapter.BNCommonSettingParam;
 import com.baidu.navisdk.adapter.BNOuterTTSPlayerCallback;
+import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.tencent.smtt.export.external.interfaces.JsResult;
@@ -31,6 +33,9 @@ import com.tencent.smtt.sdk.WebViewClient;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private URL mIntentUrl;
@@ -71,12 +76,22 @@ public class MainActivity extends AppCompatActivity {
     /**
      * BD start
      **/
-    private String mSDCardPath = null;
+    public static List<Activity> activityList = new LinkedList<>();
     private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
-    private final static String authBaseArr[] = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
+    private String mSDCardPath = null;
+    public static final String ROUTE_PLAN_NODE = "routePlanNode";
+    public static final String SHOW_CUSTOM_ITEM = "showCustomItem";
+    public static final String RESET_END_NODE = "resetEndNode";
+    public static final String VOID_MODE = "voidMode";
+    private final static String authBaseArr[] =
+            {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
+    private final static String authComArr[] = {Manifest.permission.READ_PHONE_STATE};
     private final static int authBaseRequestCode = 1;
-    String authinfo = null;
+    private final static int authComRequestCode = 2;
     private boolean hasInitSuccess = false;
+    private boolean hasRequestComAuth = false;
+    String authinfo = null;
+    private BNRoutePlanNode.CoordinateType mCoordinateType = null;
 
     private boolean initDirs() {
         mSDCardPath = getSdcardDir();
@@ -192,6 +207,77 @@ public class MainActivity extends AppCompatActivity {
         BNaviSettingManager.setNaviSdkParam(bundle);
     }
 
+    private void routeplanToNavi(BNRoutePlanNode.CoordinateType coType) {
+        mCoordinateType = coType;
+        if (!hasInitSuccess) {
+            Toast.makeText(MainActivity.this, "还未初始化!", Toast.LENGTH_SHORT).show();
+        }
+        // 权限申请
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            // 保证导航功能完备
+            if (!hasCompletePhoneAuth()) {
+                if (!hasRequestComAuth) {
+                    hasRequestComAuth = true;
+                    this.requestPermissions(authComArr, authComRequestCode);
+                    return;
+                } else {
+                    Toast.makeText(MainActivity.this, "没有完备的权限!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        BNRoutePlanNode sNode = null;
+        BNRoutePlanNode eNode = null;
+        switch (coType) {
+            case GCJ02: {
+                sNode = new BNRoutePlanNode(116.30142, 40.05087, "百度大厦", null, coType);
+                eNode = new BNRoutePlanNode(116.39750, 39.90882, "北京天安门", null, coType);
+                break;
+            }
+            case WGS84: {
+                sNode = new BNRoutePlanNode(116.300821, 40.050969, "百度大厦", null, coType);
+                eNode = new BNRoutePlanNode(116.397491, 39.908749, "北京天安门", null, coType);
+                break;
+            }
+            case BD09_MC: {
+                sNode = new BNRoutePlanNode(12947471, 4846474, "百度大厦", null, coType);
+                eNode = new BNRoutePlanNode(12958160, 4825947, "北京天安门", null, coType);
+                break;
+            }
+            case BD09LL: {
+                sNode = new BNRoutePlanNode(116.30784537597782, 40.057009624099436, "百度大厦", null, coType);
+                eNode = new BNRoutePlanNode(116.40386525193937, 39.915160800132085, "北京天安门", null, coType);
+                break;
+            }
+            default:
+        }
+        if (sNode != null && eNode != null) {
+            List<BNRoutePlanNode> list = new ArrayList<>();
+            list.add(sNode);
+            list.add(eNode);
+            // 开发者可以使用旧的算路接口，也可以使用新的算路接口,可以接收诱导信息等
+            // BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true, new DemoRoutePlanListener(sNode));
+            BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true, new DemoRoutePlanListener(sNode), eventListerner);
+        }
+    }
+
+    BaiduNaviManager.NavEventListener eventListerner = new BaiduNaviManager.NavEventListener() {
+        @Override
+        public void onCommonEventCall(int what, int arg1, int arg2, Bundle bundle) {
+            BNEventHandler.getInstance().handleNaviEvent(what, arg1, arg2, bundle);
+        }
+    };
+
+    private boolean hasCompletePhoneAuth() {
+        // TODO Auto-generated method stub
+        PackageManager pm = this.getPackageManager();
+        for (String auth : authComArr) {
+            if (pm.checkPermission(auth, this.getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean hasBasePhoneAuth() {
         // TODO Auto-generated method stub
         PackageManager pm = this.getPackageManager();
@@ -201,6 +287,37 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    public class DemoRoutePlanListener implements BaiduNaviManager.RoutePlanListener {
+        private BNRoutePlanNode mBNRoutePlanNode = null;
+
+        public DemoRoutePlanListener(BNRoutePlanNode node) {
+            mBNRoutePlanNode = node;
+        }
+
+        @Override
+        public void onJumpToNavigator() {
+            /*
+             * 设置途径点以及resetEndNode会回调该接口
+             */
+            for (Activity ac : activityList) {
+                if (ac.getClass().getName().endsWith("BNDemoGuideActivity")) {
+                    return;
+                }
+            }
+            Intent intent = new Intent(MainActivity.this, BNDemoGuideActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ROUTE_PLAN_NODE, mBNRoutePlanNode);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onRoutePlanFailed() {
+            // TODO Auto-generated method stub
+            Toast.makeText(MainActivity.this, "算路失败", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -357,7 +474,12 @@ public class MainActivity extends AppCompatActivity {
     public class Navi {
         @JavascriptInterface
         public void navi() {
-            Toast.makeText(MainActivity.this, "navi", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "navi", Toast.LENGTH_SHORT).show();
+            if (BaiduNaviManager.isNaviInited()) {
+                routeplanToNavi(BNRoutePlanNode.CoordinateType.BD09LL);
+            } else {
+                Toast.makeText(MainActivity.this, "请等待地图初始化", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
