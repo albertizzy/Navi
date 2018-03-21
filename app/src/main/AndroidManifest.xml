@@ -45,18 +45,28 @@
             android:value="043ZW5B7YysbokFXaFaMl6iDntpAjxbt" />
 
         <activity
-            android:name="com.baidu.navi.sdkdemo.BNDemoMainActivity"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            android:label="@string/sdk_name">
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".BNDemoMainActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:label="@string/sdk_name">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
 
         <activity
-            android:name="com.baidu.navi.sdkdemo.RouteGuideDemo"
+            android:name=".RouteGuideDemo"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:label="@string/title_route_guide_demo">
             <intent-filter>
@@ -67,7 +77,7 @@
         </activity>
 
         <activity
-            android:name="com.baidu.navi.sdkdemo.BNDemoGuideActivity"
+            android:name=".BNDemoGuideActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:label="@string/title_route_guide_demo"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
