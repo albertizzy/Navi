@@ -221,9 +221,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        BNRoutePlanNode sNode = new BNRoutePlanNode(116.30784537597782, 40.057009624099436, "百度大厦", null, coType);
-        BNRoutePlanNode eNode = new BNRoutePlanNode(116.40386525193937, 39.915160800132085, "北京天安门", null, coType);
-
+        BNRoutePlanNode sNode = new BNRoutePlanNode(126.771665, 45.75148, "新松茂樾山", null, coType);
+        BNRoutePlanNode eNode = new BNRoutePlanNode(126.670461, 45.748914, "省公安厅", null, coType);
         List<BNRoutePlanNode> list = new ArrayList<>();
         list.add(sNode);
         list.add(eNode);
